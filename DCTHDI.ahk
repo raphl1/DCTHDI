@@ -5,6 +5,7 @@ SetTimer WatchCursor, 100
 
 WindowTitle := ""
 WindowControl := ""
+ClipboardCount := 0
 
 WatchCursor()
 {
@@ -27,11 +28,34 @@ DesktopIcons( Show:=-1 )
          DllCall("user32.dll\SendMessage", "ptr",hShellDefView, "ptr",0x111, "ptr",0x7402, "ptr",0)
 }
 
+CheckIfIconIsSelected(){
+    BackupClipboard := ClipboardAll()
+    A_Clipboard := ""
+    Send "^c"
+    ClipWait 1
 
+    Global ClipboardCount
+    ClipboardCount := 0
+
+    Loop Parse A_Clipboard, "`n", "`r"
+    {
+        ClipboardCount++
+        if(ClipboardCount == 0)
+            break
+    }
+    
+    A_Clipboard := BackupClipboard 
+    BackupClipboard := ""
+}
 
 ~LButton::{
-	if (A_PriorHotkey = A_ThisHotkey) and (A_TimeSincePriorHotkey < 400 and WindowTitle == "" and WindowControl != "Edit1") {
-		DesktopIcons()
+	if (A_PriorHotkey = A_ThisHotkey) and (A_TimeSincePriorHotkey < 300 and WindowControl != "Edit1") and (WindowTitle == "" or WindowTitle == "Program Manager") {
+		CheckIfIconIsSelected()
+        if(ClipboardCount < 1){
+            DesktopIcons()
+        } else {
+            return
+        }
 	} else {
 		return
 	}
