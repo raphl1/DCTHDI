@@ -4,18 +4,15 @@
 SetTimer WatchCursor, 100
 
 WindowTitle := ""
+WindowControl := ""
 
 WatchCursor()
 {
     MouseGetPos , , &id, &control
-    ; ToolTip
-    ; (
-    ;     "ahk_id " id "
-    ;     ahk_class " WinGetClass(id) "
-    ;     " WinGetTitle(id) "
-    ;     Control: " control
-    ; )
+    Global WindowTitle
+    Global WindowControl
     WindowTitle := WinGetTitle(id)
+    WindowControl := control
 }
 
 DesktopIcons( Show:=-1 )
@@ -33,7 +30,7 @@ DesktopIcons( Show:=-1 )
 
 
 ~LButton::{
-	if (A_PriorHotkey = A_ThisHotkey) and (A_TimeSincePriorHotkey < 400 and WindowTitle == "") {
+	if (A_PriorHotkey = A_ThisHotkey) and (A_TimeSincePriorHotkey < 400 and WindowTitle == "" and WindowControl != "Edit1") {
 		DesktopIcons()
 	} else {
 		return
