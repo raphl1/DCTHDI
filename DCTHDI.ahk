@@ -1,7 +1,7 @@
 ﻿#Requires AutoHotkey v2.0
 #SingleInstance force
 
-SetTimer WatchCursor, 100
+; SetTimer WatchCursor, 100
 
 WindowTitle := ""
 WindowControl := ""
@@ -10,8 +10,8 @@ ClipboardCount := 0
 WatchCursor()
 {
     MouseGetPos , , &id, &control
-    Global WindowTitle
-    Global WindowControl
+    global WindowTitle 
+    global WindowControl 
     WindowTitle := WinGetTitle(id)
     WindowControl := control
 }
@@ -49,7 +49,11 @@ CheckIfIconIsSelected(){
 }
 
 ~LButton::{
-	if (A_PriorHotkey = A_ThisHotkey) and (A_TimeSincePriorHotkey < 300 and WindowControl != "Edit1") and (WindowTitle == "" or WindowTitle == "Program Manager") {
+    if (A_PriorHotkey = A_ThisHotkey) and (A_TimeSincePriorHotkey < 250) {
+        WatchCursor()
+    }
+
+	if (A_PriorHotkey = A_ThisHotkey) and (A_TimeSincePriorHotkey < 250 and WindowControl != "Edit1") and (WindowTitle == "" or WindowTitle == "Program Manager") {
 		CheckIfIconIsSelected()
         if(ClipboardCount < 1){
             DesktopIcons()
